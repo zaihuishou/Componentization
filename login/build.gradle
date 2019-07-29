@@ -1,0 +1,37 @@
+apply plugin: COMPILEMODEL
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+android {
+    compileSdkVersion 28
+    defaultConfig  mDefaultConfig
+    kapt{
+        arguments{
+            arg("moduleName", project.getName())
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+ sourceSets{
+     main{
+       if(isSingleCompile){
+           manifest.srcFile 'src/main/manifest/single/AndroidManifest.xml'
+       }else {
+           manifest.srcFile 'src/main/manifest/integrated/AndroidManifest.xml'
+       }
+     }
+ }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':basecomponentsmodule')
+    implementation project(path: ':route-core')
+    kapt project(':route-compiler')
+}
